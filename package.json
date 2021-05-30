@@ -1,0 +1,23 @@
+{
+  "name": "markdown-in-html",
+  "version": "1.0.0",
+  "description": "Write markdown in HTML file",
+  "main": "markdownInHtml.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linkhanfeng/markdown-in-html.git"
+  },
+  "keywords": [
+    "markdown",
+    "html"
+  ],
+  "author": "hanfengv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/linkhanfeng/markdown-in-html/issues"
+  },
+  "homepage": "https://github.com/linkhanfeng/markdown-in-html#readme"
+}
