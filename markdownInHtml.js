@@ -4,79 +4,61 @@ const PREFIX = "__MDHTML__";
 
 const getHtmlStr = () => document.body.innerHTML;
 
-const replaceHtml = (htmlStr) => document.body.innerHTML.replace(/\n{2,}/g, `\n\n`);
+const replaceHtml = (htmlStr) => {
+  return htmlStr.replace(/\n{2,}/g, `\n\n`).replace(/[\-|\*|_]{4,}/g, "---");
+};
 
 const splitHtmlStr = (htmlStr) => replaceHtml(htmlStr).split("\n");
 
-// 标题
-const getHeadings = (str) => {
-  const matchs = str.match(parseMap.get("headings").regExp);
-  if (matchs === null) return false;
+const mdhm = (htmlMarkup = "p", text = "", mdMarkup = "", matchs = []) => {
   return {
-    htmlMarkup: `h${matchs[1].length - 1}`,
-    text: matchs[2],
-    mdMarkup: matchs[1],
-  };
-};
-
-const parseHeadings = (str) => {
-  const om = getHeadings(str);
-  if (om === false) return str;
-  return `<${om.htmlMarkup}>${om.text}</${om.htmlMarkup}>`;
-};
-
-// 标题
-const getBold = (str) => {
-  const matchs = str.match(parseMap.get("bold").regExp);
-  console.log(5555, matchs);
-  if (matchs === null) return false;
-  return {
-    htmlMarkup: "strong",
-    text: matchs[2],
-    mdMarkup: matchs[1],
+    htmlMarkup,
+    text,
+    mdMarkup,
     matchs,
   };
 };
 
+// 标题
+const getHeadings = (str) => {
+  const matchs = str.match(parseMap.get("headings").regExp);
+  return matchs ? mdhm(`h${matchs[1]?.length - 1}`, matchs[2], matchs[1], matchs) : mdhm();
+};
+const parseHeadings = (str) => {
+  const mdh = getHeadings(str);
+  return `<${mdh.htmlMarkup}>${mdh.text}</${mdh.htmlMarkup}>`;
+};
+
+// 加粗
+const getBold = (str) => {
+  const matchs = str.match(parseMap.get("bold").regExp);
+  return matchs ? mdhm("strong", matchs[2], matchs[1], matchs) : mdhm();
+};
 const parseBold = (str) => {
-  const om = getBold(str);
-  if (om === false) return str;
-  om.matchs.forEach((item) => (str = str.replace(item, `<${om.htmlMarkup}>${item}</${om.htmlMarkup}>`)));
+  const mdh = getBold(str);
+  mdh.matchs.forEach((item) => (str = str.replace(item, `<${mdh.htmlMarkup}>${item}</${mdh.htmlMarkup}>`)));
   return str;
 };
 
 // 单行引用
 const getBlockquotes = (str) => {
   const matchs = str.match(parseMap.get("blockquotes").regExp);
-  if (matchs === null) return false;
-  return {
-    htmlMarkup: "blockquote",
-    text: matchs[2],
-    mdMarkup: matchs[1],
-  };
+  return matchs ? mdhm("blockquote", matchs[2], matchs[1], matchs) : mdhm();
 };
-
 const parseBlockquotes = (str) => {
-  const om = getBlockquotes(str);
-  if (om === false) return str;
-  return `<${om.htmlMarkup}>${om.text}</${om.htmlMarkup}>`;
+  const mdh = getBlockquotes(str);
+  return `<${mdh.htmlMarkup}>${mdh.text}</${mdh.htmlMarkup}>`;
 };
 
 // 分割线
 const getHorizontalRules = (str) => {
   const matchs = str.match(parseMap.get("horizontalRules").regExp);
-  if (matchs === null) return false;
-  return {
-    htmlMarkup: "hr",
-    text: matchs[2],
-    mdMarkup: matchs[1],
-  };
+  return matchs ? mdhm("hr", matchs[2], matchs[1], matchs) : mdhm();
 };
 
 const parseHorizontalRules = (str) => {
-  const om = getHorizontalRules(str);
-  if (om === false) return str;
-  return `<${om.htmlMarkup}/>`;
+  const mdh = getHorizontalRules(str);
+  return `<${mdh.htmlMarkup}/>`;
 };
 
 var parseMap = new Map([
@@ -120,13 +102,11 @@ const parseArr = [...parseMap].map((item) => {
 const parseRow = (htmlStrArr) => {
   const parses = htmlStrArr.map((htmlStr) => parseArr.filter((parse) => parse.regExp.test(htmlStr)));
   const parsedArr = htmlStrArr.map((htmlStr, index) => {
-    // return parses[index].reduce((a, b) => a + b.method(htmlStr), "");
     parses[index].forEach((parse) => {
       htmlStr = parse.method(htmlStr);
     });
     return htmlStr;
   });
-  // console.log("parsedArr::", parsedArr);
   return parsedArr;
 };
 
@@ -137,10 +117,7 @@ const parseHtmlMarkdown = () => {
   const parsedHtmlArr = parseRow(htmlStrArr);
 
   // const parsedHtmlArr = htmlStrArr
-  //   .map((item) => parseHeadings(item))
-  //   .map((item) => parseBold(item))
-  //   .map((item) => parseBlockquotes(item))
-  //   .map((item) => parseHorizontalRules(item));
+  //   .map((item) => parseHeadings(item));
   // console.log("parsedHtmlArr::", parsedHtmlArr);
 
   // const parsedHtmlArr = [];
