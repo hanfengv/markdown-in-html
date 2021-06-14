@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linkhanfeng/markdown-in-html.git"
+    "url": "git+https://github.com/hanfengv/markdown-in-html.git"
   },
   "keywords": [
     "markdown",
@@ -17,7 +17,7 @@
   "author": "hanfengv",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/linkhanfeng/markdown-in-html/issues"
+    "url": "https://github.com/hanfengv/markdown-in-html/issues"
   },
-  "homepage": "https://github.com/linkhanfeng/markdown-in-html#readme"
+  "homepage": "https://github.com/hanfengv/markdown-in-html#readme"
 }
