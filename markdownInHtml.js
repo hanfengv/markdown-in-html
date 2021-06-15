@@ -34,6 +34,12 @@ const parseHeadings = (str) => {
 };
 
 // TODO:: 段落（Paragraphs）
+const parseParagraphs = (rows) => {
+  return rows.map((item, index) => {
+    return !/^<.*>/.test(item) && rows[index + 1] === "" ? `<p>${item}</p>` : item;
+  });
+};
+
 // TODO:: 换行（Line Breaks）
 
 // 粗体（Bold）
@@ -89,6 +95,8 @@ const parseHorizontalRules = (str) => {
   const mdh = getHorizontalRules(str);
   return `<${mdh.htmlMarkup}/>`;
 };
+
+// 列表（Lists）
 
 var parseMap = new Map([
   [
@@ -158,6 +166,10 @@ const parseHtmlMarkdown = () => {
   const htmlStrArr = splitHtmlStr(htmlStr);
   console.log("htmlStrArr::", htmlStrArr);
   const parsedHtmlArr = parseRow(htmlStrArr);
+  console.log("parsedHtmlArr::", parsedHtmlArr);
+  // 解析P便签
+  const parsedP = parseParagraphs(parsedHtmlArr);
+  console.log("parsedP::", parsedP);
 
   // const parsedHtmlArr = htmlStrArr
   //   .map((item) => parseHeadings(item));
@@ -165,7 +177,7 @@ const parseHtmlMarkdown = () => {
 
   // const parsedHtmlArr = [];
 
-  const parsedHtmlStr = parsedHtmlArr.join("");
+  const parsedHtmlStr = parsedP.join("");
   document.body.innerHTML = parsedHtmlStr;
 };
 
